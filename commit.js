@@ -35,6 +35,7 @@ async function autoCommitFunc() {
       await git.addRemote("origin",`${message}`);
       await git.push(["-u", "origin", "main"]);
       console.log(chalk.green(consoleMessage));
+      console.log("message is: ",message);
       break;
     default:
       messagePrefix = "🤖 Automatic Commit";
