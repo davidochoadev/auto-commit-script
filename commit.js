@@ -47,11 +47,11 @@ async function autoCommitFunc() {
   }
 
   if( !isFirstCommit) {
-    console.log(chalk.red(`🚧 Adding all files to git staging...`))
+    console.log(chalk.yellow(`🚧 Adding all files to git staging...`))
     await git.add(".").then(msg => console.log(chalk.green(msg))).catch(err => console.log(chalk.red(err)));
     await git.commit(`${messagePrefix}: ${message}`);
-    console.log(chalk.red(`🏗 Preparing to push...`))
-    await git.push("origin", "main").then(msg => console.log(chalk.green(msg))).catch(err => console.log(chalk.red(err)));
+    console.log(chalk.yellow(`🏗 Preparing to push...`))
+    await git.push("origin", "main").then(msg => console.log(chalk.green(JSON.stringify(msg)))).catch(err => console.log(chalk.red(err)));
     console.log(chalk.green(consoleMessage));
   }
 }
