@@ -32,7 +32,7 @@ async function autoCommitFunc() {
       await git.add(".");
       await git.commit(`${messagePrefix}`);
       await git.raw(["branch", "-m", "main"]);
-      await git.addRemote(["origin",`${message}`]);
+      await git.addRemote("origin",`${message}`);
       await git.push(["-u", "origin", "main"]);
       console.log(chalk.green(consoleMessage));
       break;
