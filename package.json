@@ -1,0 +1,21 @@
+{
+  "name": "my-commit",
+  "version": "1.0.0",
+  "description": "Script to automate git commits",
+  "type": "module",
+  "main": "git.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "commit": "commit.js"
+  },
+  "preferGlobal": true,
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "simple-git": "^3.19.0"
+  }
+}
