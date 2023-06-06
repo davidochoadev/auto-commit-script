@@ -32,11 +32,13 @@ async function autoCommitFunc() {
       messagePrefix = "🚀 First Commit";
       consoleMessage = "🚀 First Commit Successful";
       isFirstCommit = true;
-      await git.init(".");
-      await git.add(".");
+      await git.init(".").then(console.log(chalk.blue("🎬 Init of git in the folder...")));
+      await git.add(".").then(console.log(chalk.yellow("🚧 Adding all files to git staging...")));
       await git.commit(`${messagePrefix}`);
       await git.raw(["branch", "-m", "main"]);
+      console.log(chalk.yellow(`🏗 Connection to git repository - [${message}"]...`));
       await git.addRemote('origin',`${message}`);
+      console.log(chalk.yellow(`🏗 Preparing to push...`));
       await git.push(["-u", "origin", "main"]);
       console.log(chalk.green(consoleMessage));
       break;
