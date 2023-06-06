@@ -50,7 +50,7 @@ async function autoCommitFunc() {
 }
 
 try {
-  autoCommitFunc().catch(err => console.log(chalk.red("Failed to Commit")));
+  autoCommitFunc().catch(err => console.log(chalk.red("Failed to Commit", err)));
 } catch (error) {
   console.log(error);
 }
