@@ -13,18 +13,22 @@ async function autoCommitFunc() {
 
   switch (process.argv.slice(2)[0]) {
     case "fix":
+      console.log(chalk.blue(`🛠 Preparing to Fix...`))
       messagePrefix = "🛠 Fix";
       consoleMessage = "🛠 Fixing Commit Successful";
       break;
     case "feat":
+      console.log(chalk.blue(`✅ Preparing to Commit New Feature...`))
       messagePrefix = "✅ Feat";
       consoleMessage = "✅ Featuring Commit Successful";
       break;
     case "refactoring":
+      console.log(chalk.blue(`✏️ Preparing to Refactoring...`))
       messagePrefix = "✏️ Refactoring";
       consoleMessage = "✏️ Refactoring Commit Successful";
       break;
     case "first":
+      console.log(chalk.blue(`🚀 Preparing to First Commit...`))
       messagePrefix = "🚀 First Commit";
       consoleMessage = "🚀 First Commit Successful";
       isFirstCommit = true;
@@ -37,14 +41,17 @@ async function autoCommitFunc() {
       console.log(chalk.green(consoleMessage));
       break;
     default:
+      console.log(chalk.blue(`⚙️ Preparing Automatic Commit...`))
       messagePrefix = "🤖 Automatic Commit";
       consoleMessage = "🤖 Automaitc Commit Successful";
   }
 
   if( !isFirstCommit) {
-    await git.add(".");
+    console.log(chalk.red(`🚧 Adding all files to git staging...`))
+    await git.add(".").then(msg => console.log(chalk.green(msg))).catch(err => console.log(chalk.red(err)));
     await git.commit(`${messagePrefix}: ${message}`);
-    await git.push("origin", "main");
+    console.log(chalk.red(`🏗 Preparing to push...`))
+    await git.push("origin", "main").then(msg => console.log(chalk.green(msg))).catch(err => console.log(chalk.red(err)));
     console.log(chalk.green(consoleMessage));
   }
 }
