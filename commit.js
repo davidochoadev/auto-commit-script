@@ -51,8 +51,7 @@ async function autoCommitFunc() {
   if( !isFirstCommit) {
     console.log(chalk.yellow(`🚧 Adding all files to git staging...`))
     await git.add(".");
-    await git.commit(`${messagePrefix}: ${message}`);
-    console.log(chalk.yellow(`🏗 Preparing to push...`));
+    await git.commit(`${messagePrefix}: ${message}`).then(console.log(chalk.yellow(`🏗  Preparing to push...`)));
     await git.push("origin", "main");
     console.log(chalk.green(consoleMessage));
   }
