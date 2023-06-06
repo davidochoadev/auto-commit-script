@@ -25,6 +25,7 @@ async function autoCommitFunc() {
       consoleMessage = "✏️ Refactoring Commit Successful";
       break;
     case "first":
+      console.log("message is: ",message);
       messagePrefix = "🚀 First Commit";
       consoleMessage = "🚀 First Commit Successful";
       isFirstCommit = true;
@@ -35,7 +36,6 @@ async function autoCommitFunc() {
       await git.addRemote("origin",`${message}`);
       await git.push(["-u", "origin", "main"]);
       console.log(chalk.green(consoleMessage));
-      console.log("message is: ",message);
       break;
     default:
       messagePrefix = "🤖 Automatic Commit";
