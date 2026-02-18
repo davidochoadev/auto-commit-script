@@ -15,7 +15,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "boxen": "^8.0.1",
     "chalk": "^5.2.0",
+    "ora": "^9.3.0",
     "simple-git": "^3.19.0"
   }
 }
