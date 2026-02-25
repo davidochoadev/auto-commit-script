@@ -5,8 +5,20 @@ import simpleGit from "simple-git";
 
 const git = simpleGit();
 
-// Stile sobrio in linea con prompt zsh: ➜ ❯ ✓ ✗, colori tenui, niente box
-const PROMPT = "➜";
+// Icone Powerlevel10k (nerdfont-complete) - stesso set di p10k
+// https://github.com/romkatv/powerlevel10k - richiede Nerd Font per  OK FAIL branch commit
+const p10k = {
+  first: "\u256D\u2500",   // ╭─ MULTILINE_FIRST_PROMPT_PREFIX
+  line: "\u251C\u2500",   // ├─ MULTILINE_NEWLINE_PROMPT_PREFIX
+  last: "\u2570\u2500",   // ╰─ MULTILINE_LAST_PROMPT_PREFIX
+  ruler: "\u2500",        // ─ RULER_CHAR
+  ok: "\uF00C",          //  OK_ICON (check)
+  fail: "\uF00D",        //  FAIL_ICON (times)
+  branch: "\uF126",      //  VCS_BRANCH_ICON
+  commit: "\uE729",      //  VCS_COMMIT_ICON
+  git: "\uF1D3",         //  VCS_GIT_ICON
+};
+
 const COMMIT_TYPES = {
   fix: {
     prefix: "Fix",
@@ -58,36 +70,36 @@ async function isRepo() {
 
 function printHeader(config) {
   console.log();
-  console.log(chalk.cyan(PROMPT) + " " + chalk.bold(config.label));
+  console.log(chalk.cyan(p10k.first) + " " + chalk.bold(config.label));
   console.log();
 }
 
 function printSuccess(config, message, branch, extra = null) {
-  console.log(chalk.green("✓") + " " + chalk.bold(config.success));
-  console.log(chalk.dim("  branch  ") + branch);
-  console.log(chalk.dim("  message ") + message);
-  if (extra) console.log(chalk.dim("  remote  ") + extra);
+  console.log(chalk.green(p10k.ok) + " " + chalk.bold(config.success));
+  console.log(chalk.dim("  " + p10k.branch + "  ") + branch);
+  console.log(chalk.dim("  " + p10k.commit + " ") + message);
+  if (extra) console.log(chalk.dim("  " + p10k.git + "  ") + extra);
   console.log();
 }
 
 function printError(errMessage) {
-  console.error(chalk.red("✗") + " " + chalk.bold("commit fallito"));
+  console.error(chalk.red(p10k.fail) + " " + chalk.bold("commit fallito"));
   console.error(chalk.dim("  " + (errMessage || "")));
   console.error();
 }
 
 async function doAddCommitPush(prefix, message, branch) {
-  const spinAdd = ora({ text: chalk.dim("aggiunta file allo staging"), color: "cyan" }).start();
+  const spinAdd = ora({ text: chalk.dim(p10k.line + " staging"), color: "cyan" }).start();
   await git.add(".");
-  spinAdd.succeed(chalk.dim("staging"));
+  spinAdd.succeed(chalk.dim(p10k.line + " staging"));
 
-  const spinCommit = ora({ text: chalk.dim("creazione commit"), color: "cyan" }).start();
+  const spinCommit = ora({ text: chalk.dim(p10k.line + " commit"), color: "cyan" }).start();
   await git.commit(`${prefix}: ${message}`);
-  spinCommit.succeed(chalk.dim("commit"));
+  spinCommit.succeed(chalk.dim(p10k.line + " commit"));
 
-  const spinPush = ora({ text: chalk.dim("push origin"), color: "cyan" }).start();
+  const spinPush = ora({ text: chalk.dim(p10k.line + " push"), color: "cyan" }).start();
   await git.push("origin", branch);
-  spinPush.succeed(chalk.dim("push"));
+  spinPush.succeed(chalk.dim(p10k.line + " push"));
 }
 
 async function runFirstCommit(remoteUrl) {
@@ -95,29 +107,29 @@ async function runFirstCommit(remoteUrl) {
     throw new Error('Per "first" serve l\'URL del remote: commit first "https://github.com/user/repo.git"');
   }
 
-  const spinInit = ora({ text: chalk.dim("init repo"), color: "cyan" }).start();
+  const spinInit = ora({ text: chalk.dim(p10k.line + " init"), color: "cyan" }).start();
   await git.init(".");
-  spinInit.succeed(chalk.dim("init"));
+  spinInit.succeed(chalk.dim(p10k.line + " init"));
 
-  const spinAdd = ora({ text: chalk.dim("staging"), color: "cyan" }).start();
+  const spinAdd = ora({ text: chalk.dim(p10k.line + " staging"), color: "cyan" }).start();
   await git.add(".");
-  spinAdd.succeed(chalk.dim("staging"));
+  spinAdd.succeed(chalk.dim(p10k.line + " staging"));
 
-  const spinCommit = ora({ text: chalk.dim("primo commit"), color: "cyan" }).start();
+  const spinCommit = ora({ text: chalk.dim(p10k.line + " commit"), color: "cyan" }).start();
   await git.commit(COMMIT_TYPES.first.prefix);
-  spinCommit.succeed(chalk.dim("commit"));
+  spinCommit.succeed(chalk.dim(p10k.line + " commit"));
 
-  const spinBranch = ora({ text: chalk.dim("branch main"), color: "cyan" }).start();
+  const spinBranch = ora({ text: chalk.dim(p10k.line + " branch main"), color: "cyan" }).start();
   await git.raw(["branch", "-m", "main"]);
-  spinBranch.succeed(chalk.dim("main"));
+  spinBranch.succeed(chalk.dim(p10k.line + " main"));
 
-  const spinRemote = ora({ text: chalk.dim("remote origin"), color: "cyan" }).start();
+  const spinRemote = ora({ text: chalk.dim(p10k.line + " origin"), color: "cyan" }).start();
   await git.addRemote("origin", remoteUrl);
-  spinRemote.succeed(chalk.dim("origin"));
+  spinRemote.succeed(chalk.dim(p10k.line + " origin"));
 
-  const spinPush = ora({ text: chalk.dim("push"), color: "cyan" }).start();
+  const spinPush = ora({ text: chalk.dim(p10k.line + " push"), color: "cyan" }).start();
   await git.push(["-u", "origin", "main"]);
-  spinPush.succeed(chalk.dim("push"));
+  spinPush.succeed(chalk.dim(p10k.line + " push"));
 
   printSuccess(COMMIT_TYPES.first, "Primo commit", "main", remoteUrl);
 }

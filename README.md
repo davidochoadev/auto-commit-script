@@ -60,6 +60,7 @@ commit first "https://github.com/user/repo.git"
 
 - Node.js
 - Git installato e in PATH
+- **Icone:** lo script usa le stesse icone di [Powerlevel10k](https://github.com/romkatv/powerlevel10k). Per vederle correttamente usa un [Nerd Font](https://www.nerdfonts.com/) (es. MesloLGS NF, FiraCode Nerd Font) nel terminale.
 
 ## Troubleshooting
 
