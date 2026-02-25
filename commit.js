@@ -24,26 +24,31 @@ const COMMIT_TYPES = {
     prefix: "Fix",
     label: "fix",
     success: "Fix completato",
+    icon: "🛠",
   },
   feat: {
     prefix: "Feat",
     label: "feat",
     success: "Feature completata",
+    icon: "✅",
   },
   refactoring: {
     prefix: "Refactoring",
     label: "refactoring",
     success: "Refactoring completato",
+    icon: "♻️",
   },
   first: {
     prefix: "First Commit",
     label: "first",
     success: "Primo commit e push completati",
+    icon: "🚀",
   },
   default: {
     prefix: "Automatic Commit",
     label: "commit",
     success: "Commit completato",
+    icon: "🤖",
   },
 };
 
@@ -69,13 +74,15 @@ async function isRepo() {
 }
 
 function printHeader(config) {
+  const icon = config.icon || "";
   console.log();
-  console.log(chalk.cyan(p10k.first) + " " + chalk.bold(config.label));
+  console.log(chalk.cyan(p10k.first) + " " + (icon ? icon + " " : "") + chalk.bold(config.label));
   console.log();
 }
 
 function printSuccess(config, message, branch, extra = null) {
-  console.log(chalk.green(p10k.ok) + " " + chalk.bold(config.success));
+  const icon = config.icon ? config.icon + " " : "";
+  console.log(chalk.green(p10k.ok) + " " + icon + chalk.bold(config.success));
   console.log(chalk.dim("  " + p10k.branch + "  ") + branch);
   console.log(chalk.dim("  " + p10k.commit + " ") + message);
   if (extra) console.log(chalk.dim("  " + p10k.git + "  ") + extra);
