@@ -34,31 +34,39 @@ npm install -g /percorso/auto-commit-script
 
 Oppure dalla cartella del progetto: `npm install -g .` oppure `npm link`.
 
+## Comportamento
+
+Lo script esegue sempre: **add .** (tutti i file), **commit** con messaggio `{prefisso}: {messaggio}`, e (salvo `--no-push`) **push** su `origin` sul branch corrente. Per `first`: init, add, commit, rinomina branch (default `main`), aggiunge remote `origin`, push.
+
 ## Utilizzo
 
-Esegui da dentro una repository Git:
+Esegui da dentro una repository Git. Tipi con emoji:
 
-| Comando | Descrizione |
-|--------|-------------|
-| `commit` | Commit automatico con messaggio di default |
-| `commit fix "descrizione"` | Commit di tipo fix |
-| `commit feat "descrizione"` | Commit per nuova feature |
-| `commit refactoring "descrizione"` | Commit di refactoring |
-| `commit first "url-remote"` | Primo commit: init, add, commit, branch main, remote, push |
+| Tipo | Emoji | Comando | Descrizione |
+|------|-------|--------|-------------|
+| fix | 🛠 | `commit fix "descrizione"` | Fix / correzioni |
+| feat | ✅ | `commit feat "descrizione"` | Nuova feature |
+| refactoring | ♻️ | `commit refactoring "descrizione"` | Refactoring |
+| first | 🚀 | `commit first "url-remote"` | Primo commit: init, add, commit, branch main, remote, push |
+| (nessuno) | 🤖 | `commit` | Commit automatico con messaggio di default |
+
+Opzioni: **`-h` / `--help`** (mostra aiuto), **`-n` / `--no-push`** (solo add + commit, senza push), **`--branch nome`** (per `first`: usa questo branch invece di `main`).
 
 Esempi:
 
 ```bash
 commit
 commit fix "corretto bug nel login"
-commit feat "aggiunto pulsante export"
+commit feat "aggiunto pulsante export" --no-push
 commit refactoring "semplificata logica API"
 commit first "https://github.com/user/repo.git"
+commit first "https://github.com/user/repo.git" --branch develop
+commit --help
 ```
 
 ## Requisiti
 
-- Node.js
+- Node.js (>= 18)
 - Git installato e in PATH
 - **Icone:** lo script usa le stesse icone di [Powerlevel10k](https://github.com/romkatv/powerlevel10k). Per vederle correttamente usa un [Nerd Font](https://www.nerdfonts.com/) (es. MesloLGS NF, FiraCode Nerd Font) nel terminale.
 
@@ -73,6 +81,12 @@ Il comando non è in PATH in questa sessione. Prova:
 4. Verifica che il comando esista: `which commit` (deve mostrare un path tipo `…/node/…/bin/commit`).
 
 Se ancora non funziona, dalla cartella del progetto esegui di nuovo `npm link`.
+
+**"Niente da committare, working tree pulido"**  
+Non ci sono modifiche da includere nel commit. Lo script fa già add di tutti i file; se il messaggio appare comunque, la working tree è già pulita (nessun file modificato o non tracciato). Aggiungi o modifica file e riprova.
+
+**Push rifiutato / non-fast-forward**  
+Il remote ha commit che non hai in locale. Esegui `git pull --rebase origin <branch>` (o `git pull`) e poi ripeti il push o usa di nuovo `commit`.
 
 ## Licenza
 

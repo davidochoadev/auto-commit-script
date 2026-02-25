@@ -3,17 +3,20 @@
   "version": "1.0.0",
   "description": "Script to automate git commits",
   "type": "module",
-  "main": "git.js",
+  "main": "commit.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test commit.test.js"
   },
   "bin": {
     "commit": "commit.js"
   },
   "preferGlobal": true,
-  "keywords": [],
-  "author": "",
+  "keywords": ["git", "commit", "automation"],
+  "author": "davidochoa.dev@gmail.com",
   "license": "ISC",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "chalk": "^5.2.0",
     "ora": "^9.3.0",
