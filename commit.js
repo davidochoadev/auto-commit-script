@@ -1,35 +1,36 @@
 #!/usr/bin/env node
 import chalk from "chalk";
-import boxen from "boxen";
 import ora from "ora";
 import simpleGit from "simple-git";
 
 const git = simpleGit();
 
+// Stile sobrio in linea con prompt zsh: ➜ ❯ ✓ ✗, colori tenui, niente box
+const PROMPT = "➜";
 const COMMIT_TYPES = {
   fix: {
-    prefix: "🛠 Fix",
-    preparing: "🛠 Fix",
+    prefix: "Fix",
+    label: "fix",
     success: "Fix completato",
   },
   feat: {
-    prefix: "✅ Feat",
-    preparing: "✅ Feat",
+    prefix: "Feat",
+    label: "feat",
     success: "Feature completata",
   },
   refactoring: {
-    prefix: "✏️ Refactoring",
-    preparing: "✏️ Refactoring",
+    prefix: "Refactoring",
+    label: "refactoring",
     success: "Refactoring completato",
   },
   first: {
-    prefix: "🚀 First Commit",
-    preparing: "🚀 First Commit",
+    prefix: "First Commit",
+    label: "first",
     success: "Primo commit e push completati",
   },
   default: {
-    prefix: "🤖 Automatic Commit",
-    preparing: "🤖 Auto",
+    prefix: "Automatic Commit",
+    label: "commit",
     success: "Commit completato",
   },
 };
@@ -57,53 +58,36 @@ async function isRepo() {
 
 function printHeader(config) {
   console.log();
-  console.log(chalk.bold.cyan("  ◆ ") + chalk.bold(config.preparing));
-  console.log(chalk.dim("  ─────────────────────────"));
+  console.log(chalk.cyan(PROMPT) + " " + chalk.bold(config.label));
   console.log();
 }
 
-function printSuccessBox(config, message, branch, extra = null) {
-  const lines = [
-    chalk.green("✓ ") + chalk.bold(config.success),
-    "",
-    chalk.dim("Branch:  ") + branch,
-    chalk.dim("Message: ") + message,
-  ];
-  if (extra) lines.push(chalk.dim("Remote:  ") + extra);
-  const box = boxen(lines.join("\n"), {
-    padding: 1,
-    margin: 1,
-    borderStyle: "round",
-    borderColor: "green",
-    dimBorder: true,
-  });
-  console.log(box);
+function printSuccess(config, message, branch, extra = null) {
+  console.log(chalk.green("✓") + " " + chalk.bold(config.success));
+  console.log(chalk.dim("  branch  ") + branch);
+  console.log(chalk.dim("  message ") + message);
+  if (extra) console.log(chalk.dim("  remote  ") + extra);
+  console.log();
 }
 
-function printErrorBox(errMessage) {
-  const content = chalk.red("✗ ") + chalk.bold("Commit fallito") + "\n\n" + chalk.dim(errMessage);
-  const box = boxen(content, {
-    padding: 1,
-    margin: 1,
-    borderStyle: "round",
-    borderColor: "red",
-    dimBorder: true,
-  });
-  console.error(box);
+function printError(errMessage) {
+  console.error(chalk.red("✗") + " " + chalk.bold("commit fallito"));
+  console.error(chalk.dim("  " + (errMessage || "")));
+  console.error();
 }
 
 async function doAddCommitPush(prefix, message, branch) {
-  const spinAdd = ora({ text: "Aggiunta file allo staging...", color: "yellow" }).start();
+  const spinAdd = ora({ text: chalk.dim("aggiunta file allo staging"), color: "cyan" }).start();
   await git.add(".");
-  spinAdd.succeed("File aggiunti allo staging");
+  spinAdd.succeed(chalk.dim("staging"));
 
-  const spinCommit = ora({ text: "Creazione commit...", color: "yellow" }).start();
+  const spinCommit = ora({ text: chalk.dim("creazione commit"), color: "cyan" }).start();
   await git.commit(`${prefix}: ${message}`);
-  spinCommit.succeed("Commit creato");
+  spinCommit.succeed(chalk.dim("commit"));
 
-  const spinPush = ora({ text: "Push su origin...", color: "yellow" }).start();
+  const spinPush = ora({ text: chalk.dim("push origin"), color: "cyan" }).start();
   await git.push("origin", branch);
-  spinPush.succeed("Push completato");
+  spinPush.succeed(chalk.dim("push"));
 }
 
 async function runFirstCommit(remoteUrl) {
@@ -111,38 +95,37 @@ async function runFirstCommit(remoteUrl) {
     throw new Error('Per "first" serve l\'URL del remote: commit first "https://github.com/user/repo.git"');
   }
 
-  const spinInit = ora({ text: "Inizializzazione repository...", color: "blue" }).start();
+  const spinInit = ora({ text: chalk.dim("init repo"), color: "cyan" }).start();
   await git.init(".");
-  spinInit.succeed("Repository inizializzata");
+  spinInit.succeed(chalk.dim("init"));
 
-  const spinAdd = ora({ text: "Aggiunta file allo staging...", color: "yellow" }).start();
+  const spinAdd = ora({ text: chalk.dim("staging"), color: "cyan" }).start();
   await git.add(".");
-  spinAdd.succeed("File aggiunti allo staging");
+  spinAdd.succeed(chalk.dim("staging"));
 
-  const spinCommit = ora({ text: "Primo commit...", color: "yellow" }).start();
+  const spinCommit = ora({ text: chalk.dim("primo commit"), color: "cyan" }).start();
   await git.commit(COMMIT_TYPES.first.prefix);
-  spinCommit.succeed("Commit creato");
+  spinCommit.succeed(chalk.dim("commit"));
 
-  const spinBranch = ora({ text: "Branch rinominato in main...", color: "yellow" }).start();
+  const spinBranch = ora({ text: chalk.dim("branch main"), color: "cyan" }).start();
   await git.raw(["branch", "-m", "main"]);
-  spinBranch.succeed("Branch main");
+  spinBranch.succeed(chalk.dim("main"));
 
-  const spinRemote = ora({ text: "Connessione al remote...", color: "yellow" }).start();
+  const spinRemote = ora({ text: chalk.dim("remote origin"), color: "cyan" }).start();
   await git.addRemote("origin", remoteUrl);
-  spinRemote.succeed("Remote origin configurato");
+  spinRemote.succeed(chalk.dim("origin"));
 
-  const spinPush = ora({ text: "Push su origin/main...", color: "yellow" }).start();
+  const spinPush = ora({ text: chalk.dim("push"), color: "cyan" }).start();
   await git.push(["-u", "origin", "main"]);
-  spinPush.succeed("Push completato");
+  spinPush.succeed(chalk.dim("push"));
 
-  printSuccessBox(COMMIT_TYPES.first, "Primo commit", "main", remoteUrl);
+  printSuccess(COMMIT_TYPES.first, "Primo commit", "main", remoteUrl);
 }
 
 async function runNormalCommit(config, message, branch) {
   printHeader(config);
   await doAddCommitPush(config.prefix, message, branch);
-  console.log();
-  printSuccessBox(config, `${config.prefix}: ${message}`, branch);
+  printSuccess(config, `${config.prefix}: ${message}`, branch);
 }
 
 async function main() {
@@ -166,6 +149,6 @@ async function main() {
 
 main().catch((err) => {
   console.log();
-  printErrorBox(err.message || err);
+  printError(err.message || err);
   process.exit(1);
 });
